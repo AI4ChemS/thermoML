@@ -1,3 +1,10 @@
+.DS_Store
+.editorconfig
+.gitignore
+.travis.yml
+.github/
+New Folder With Items/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
