@@ -14,24 +14,12 @@ thermoML
         :alt: Documentation Status
 
 
-
-
-Thermodynamics-informed machine learning to predict temperature-dependent properties of fluids
-
-
 * Free software: MIT license
-* Documentation: https://thermoml.readthedocs.io.
 
 
-Features
+Thermodynamics-informed machine learning model
 --------
 
-* TODO
+This repository accompanies the paper presenting "Thermodynamics-informed machine learning to predict temperature-dependent properties of fluids". By combining established physics-based equations, such as the Arrhenius equation, with machine learning models, this approach encodes temperature dependence directly into the predictive framework. The model predicts the chemistry-dependent coefficients of equation, enabling accurate and generalizable predictions across diverse chemistries and temperature ranges. The methodology has been validated using experimental and benchmarked against two different base models.
 
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+![Thermodynamics-Informed Model Framework](images/figure.pdf)
