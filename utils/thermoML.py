@@ -30,17 +30,6 @@ from utils.hp_tuning import tune_hyperparameters
 
 
 def generate_2d_features(df):
-    """
-    Generate 2D features for materials using MORDRED based on SMILES strings.
-
-    Parameters:
-        df (pd.DataFrame): Input DataFrame with at least two columns: 'Compounds' and 'smiles'.
-
-    Returns:
-        pd.DataFrame: DataFrame with concatenated 2D features.
-    """
-
-    # Ensure the 'smiles' column exists in the input DataFrame
     if 'smiles' not in df.columns:
         raise ValueError("Input DataFrame must contain a 'smiles' column.")
 
@@ -83,15 +72,11 @@ def find_highly_correlated_features(correlation_matrix, corr_threshold):
     for i in range(correlation_matrix.shape[0]):
         for j in range(i+1, correlation_matrix.shape[1]):
             if abs(correlation_matrix.iloc[i, j]) >= corr_threshold:
-                # pairs_to_remove.add(i)
                 pairs_to_remove.add(j)
     return pairs_to_remove
     
 def sort_temp_within_chemical(mu_temp):
-    # Create an ordered categorical that preserves the original order of chemicals
     mu_temp['Compounds'] = pd.Categorical(mu_temp['Compounds'], categories=mu_temp['Compounds'].unique(), ordered = True)
-
-    # Sort by 'Compounds' first (to maintain the order) and then by 'Temperature' within each group
     mu_temp_sorted = mu_temp.sort_values(by=['Compounds', 'temp'])
     return mu_temp_sorted
     
@@ -120,7 +105,6 @@ def ANN_model_training(X_train, y_train, ln_A_train, Ea_R_train, model_path, hel
     initializer_3 = tf.keras.initializers.HeNormal()
     initializer_4 = tf.keras.initializers.HeNormal()
 
-
     ln_A_pred = Dense(1,use_bias=False, kernel_initializer = initializer_3, name='ln_A_pred')(hidden_layer_2)
     Ea_R_pred = Dense(1,use_bias=False, activation='linear', kernel_initializer = initializer_4, name='Ea_R_pred')(hidden_layer_2)
 
@@ -129,13 +113,11 @@ def ANN_model_training(X_train, y_train, ln_A_train, Ea_R_train, model_path, hel
 
     mu_pred = Lambda(lambda x: x[0] + x[1], name='mu')([ln_A_pred, Ea_RT])
 
-
     if helper_output == True:
         model = Model(inputs= [input_layer, temp_inv], outputs = [mu_pred , ln_A_pred, Ea_R_pred])
 
     else:
-        model = Model(inputs= [input_layer, temp_inv], outputs = mu_pred)
-        
+        model = Model(inputs= [input_layer, temp_inv], outputs = mu_pred)        
         
     cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath =  f"{model_path}/model.keras",
                                                      save_best_only=True,
@@ -237,10 +219,6 @@ def ANN_model_training_tuned(X_train, y_train, ln_A_train, Ea_R_train, model_pat
     
 def main_training(df, arr_data, mu_temp, path, to_drop = ['Compounds', 'smiles'], is_data_stratification = False, lim_nan_values = 0.3, corr_filter = True, corr_threshold = 0.9, var_filter = True, var_threshold = 0.02, feature_selection = 'xgboost', n_models = 20, set_size = 342, helper_output = True):
     
-#     assert set(df['Compounds'].unique()) == set(arr_data['Compounds'].unique()) == set(mu_temp['Compounds'].unique()), (
-#         "Unique Compounds strings are not the same across DataFrames."
-#     ) 
-
     df = generate_2d_features(df)
 
     mu_temp[list(set(mu_temp.columns) - set(to_drop))] = mu_temp[list(set(mu_temp.columns) - set(to_drop))].astype(float)
@@ -269,22 +247,18 @@ def main_training(df, arr_data, mu_temp, path, to_drop = ['Compounds', 'smiles']
     zero_columns = df.columns[df.eq(0).all()]
     df = df.drop(columns=zero_columns)
     
-    # Removing highly correlated features
     if corr_filter == True:
         features = df[list(set(df.columns) - set(to_drop))]
         while True:
             correlation_matrix =  features.corr()
             pairs_to_remove = find_highly_correlated_features(correlation_matrix, corr_threshold = 0.9)
 
-            # Break the loop if no more highly correlated pairs are found
             if len(pairs_to_remove) == 0:
                 break
 
-            # Remove descriptors involved in highly correlated pairs
             features =  features.drop(features.columns[list(pairs_to_remove)], axis=1).reset_index(drop=True)
         df = pd.concat([df[to_drop], features], axis = 1)
 
-    # Removing low variance features
     if var_filter == True:
         features = df[list(set(df.columns) - set(to_drop))]
         pipeline = Pipeline([
@@ -360,12 +334,12 @@ def main_training(df, arr_data, mu_temp, path, to_drop = ['Compounds', 'smiles']
         label = df_mu_log['mu_log_1']        
         
         model = XGBRegressor(
-        objective='reg:squarederror',  # Objective function for regression
-        n_estimators=100,             # Number of trees
-        max_depth=3,                  # Depth of each tree
-        learning_rate=0.1,            # Learning rate
-        subsample=0.8,                # Subsample ratio of the training instances
-        colsample_bytree=0.8          # Subsample ratio of columns when constructing each tree
+        objective='reg:squarederror', 
+        n_estimators=100,           
+        max_depth=3,                 
+        learning_rate=0.1,            
+        subsample=0.8,               
+        colsample_bytree=0.8          
         )
         
         model.fit(features.values, label.values)
@@ -406,38 +380,13 @@ def main_training(df, arr_data, mu_temp, path, to_drop = ['Compounds', 'smiles']
         Ln_A_train = df_train.loc[:,'Ln_A']
         Ea_R_train = df_train.loc[:,'Ea_R']
 
-
-        # hyper parameter tuning
-#         best_params = tune_hyperparameters(X_train, y_train, Ln_A_train, Ea_R_train)
-#         best_params = {'num_layers': 4, 'neurons_per_layer': 150, 'learning_rate': 0.002701459336082522, 'activation': 'relu'}
-
-        
-        
         model_path = os.path.join(path, str(i))
         os.makedirs(model_path, exist_ok=True)
-        model = ANN_model_training(X_train, y_train, Ln_A_train, Ea_R_train, model_path, helper_output = True, patience = 250, learning_rate = 0.01, loss_weights = [0.8 , 0.2, 0], epochs = 1000)
-
-#         model = ANN_model_training_tuned(
-#             X_train, y_train, Ln_A_train, Ea_R_train, model_path,
-#             num_layers=best_params['num_layers'],
-#             neurons_per_layer=best_params['neurons_per_layer'],
-#             learning_rate=best_params['learning_rate'],
-#             activation=best_params['activation'],
-#             loss_weights = [0.8 , 0.2, 0], 
-#             epochs = 1000)  
+        model = ANN_model_training(X_train, y_train, Ln_A_train, Ea_R_train, model_path, helper_output = True, patience = 250, learning_rate = 0.01, loss_weights = [0.8 , 0.2, 0], epochs = 1000) 
         
     return df, df_mu_log, df_mu
-
-
-
-    
  #-------------------------------------------------------------------------------------------------------------------------
    
-
-
-
-     
-    
 def main_test(df_test, temp_test, path, helper_output = True, n_models = 20, to_drop = ['Compounds', 'smiles']):
     with open(os.path.join(path, 'features.pkl'), 'rb') as file:
         features_list = pickle.load(file)
