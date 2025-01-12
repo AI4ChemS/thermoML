@@ -31,7 +31,7 @@ Repository Structure
   4. **Isothermal Base Model**: Train and test a base ML model using isothermal datasets.
   5. **Generating Parity Plots and Accuracy Matrices**: Compare the results and visualize the performance of the models.
 
-**2. Utils Folder**
+**2. utils**
 
 The **`utils`** folder contains core scripts and functions for building and training models:
 
@@ -40,11 +40,11 @@ The **`utils`** folder contains core scripts and functions for building and trai
 3. **`multitemperature_base_model.py`**: Implements the multitemperature base model, trained on datasets covering five temperature levels. Like the isothermal model, it does not rely on equations.
 4. **`thermoML.py`**: Implements the thermodynamics-informed model, including:
    - Converting SMILES to numerical descriptors using the **MORDRED Python package**.
-   - Feature selection through a pipeline (details below).
-   - Training an ensemble of mANN models using **BAGGING**.
+   - Feature selection through a pipeline based on removing features with lowest variance, highest correlation with other features and highest number of missing values. Afterwards, ML based feature selection approach such as XGboost or Random Forest are available to select the most informative features with respect to the target values.
+   - Training an ensemble of ANN models using **BAGGING** the training data.
    - Performing uncertainty assessment.
 
-**3. Data Folder**
+**3. data**
 
 - **`data`**: Contains the datasets required for training and testing the models. These include dynamic viscosity data for the fluids analyzed in the study.
 
@@ -60,17 +60,3 @@ Running the Code
 
 - Open **`viscosity.ipynb`** in Jupyter Notebook.
 - Follow the sections to train, test, and compare models.
-
-**3. Feature Selection Pipeline**
-
-The thermodynamics-informed model uses a feature selection pipeline to identify the most informative descriptors:
-
-- **BAGGING**: Creates diverse training datasets by sampling with replacement.
-- **Ensemble Learning**: Trains an ensemble of mANN models for improved accuracy and uncertainty quantification.
-
-How to Reproduce the Results
-----------------------------
-
-1. Use the **`viscosity.ipynb`** notebook to train and test the models as outlined.
-2. Refer to the **`thermoML.py`** script for implementing the thermodynamics-informed approach.
-3. Generate parity plots and compare accuracy matrices using the provided code.
