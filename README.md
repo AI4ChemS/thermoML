@@ -18,6 +18,11 @@ Prior to installation of this package, it is recommended to start a fresh enviro
 conda create -n thermo python=3.9
 conda activate thermo
 ```
+For both versions, the authors require the users to work with Tensorflow v2.12.0 and RDKit 2022.3.5, which can be installed:
+```
+pip install rdkit==2022.3.5
+pip install tensorflow==2.12.0
+```
 
 ### Pip installable version
 Our package is available on PyPI, and is pip installable from simply performing:
