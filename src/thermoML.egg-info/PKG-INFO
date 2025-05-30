@@ -1,0 +1,92 @@
+Metadata-Version: 2.4
+Name: thermoML
+Version: 0.1.0
+Summary: Predict thermophysical properties using physics-informed machine learning
+Home-page: https://github.com/yourusername/thermoML
+Author: Your Name
+Author-email: your.email@example.com
+License: MIT
+Keywords: python,chemistry-ml,thermodynamics-informed-ml,machine-learning,thermal-fluids
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: pandas>=1.3
+Requires-Dist: numpy>=1.21
+Requires-Dist: pubchempy>=1.0
+Requires-Dist: requests>=2.25
+Requires-Dist: rdkit>=2022.3.5
+Requires-Dist: mordred>=1.2.0
+Requires-Dist: scikit-learn>=1.0
+Requires-Dist: xgboost>=1.6
+Requires-Dist: tensorflow>=2.12.0
+Requires-Dist: optuna>=3.0
+Requires-Dist: openpyxl
+Requires-Dist: matplotlib
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+========
+thermoML
+========
+
+This repository accompanies the paper presenting *"Thermodynamics-informed machine learning to predict temperature-dependent properties of fluids"*. By combining established physics-based equations, such as the Arrhenius equation, with machine learning models, this approach encodes temperature dependence directly into the predictive framework. The model predicts the chemistry-dependent coefficients of the equation, enabling accurate and generalizable predictions across diverse chemistries and temperature ranges. The methodology has been validated using experimental data and benchmarked against two different base models.
+
+.. image:: images/figure.svg
+   :alt: Thermodynamics-Informed Model Framework
+   :align: center
+
+Repository Structure
+--------------------
+
+**1. Jupyter Notebook**
+
+- **`viscosity.ipynb`**: This notebook serves as the main entry point for running the analysis. It is organized into the following sections:
+
+  1. **Thermodynamics-Informed Model Training**: Train the thermodynamics-informed model using the provided dataset.
+  2. **Thermodynamics-Informed Model Testing**: Evaluate the trained model on test data.
+  3. **Multitemperature Base Model**: Train and test a base ML model using datasets spanning multiple temperatures.
+  4. **Isothermal Base Model**: Train and test a base ML model using isothermal datasets.
+  5. **Generating Parity Plots and Accuracy Matrices**: Compare the results and visualize the performance of the models.
+
+**2. utils**
+
+The **`utils`** folder contains core scripts and functions for building and training models:
+
+1. **`hp_tuning.py`**: Contains code for hyperparameter tuning using **Optuna**.
+2. **`isothermal_base_model.py`**: Implements the isothermal base model, a predictive ML model trained on isothermal data. It does not use any temperature-property equations and takes temperature as a direct input.
+3. **`multitemperature_base_model.py`**: Implements the multitemperature base model, trained on datasets covering five temperature levels. Like the isothermal model, it does not rely on equations.
+4. **`thermoML.py`**: Implements the thermodynamics-informed model, including:
+   - Converting SMILES to numerical descriptors using the **MORDRED Python package**.
+   - Feature selection through a pipeline based on removing features with lowest variance, highest correlation with other features and highest number of missing values. Afterwards, ML based feature selection approach such as XGboost or Random Forest are available to select the most informative features with respect to the target values.
+   - Training an ensemble of ANN models using **BAGGING** the training data.
+   - Performing uncertainty assessment.
+
+**3. data**
+
+- **`data`**: Contains the datasets required for training and testing the models. These include dynamic viscosity data for the fluids analyzed in the study.
+
+Running the Code
+----------------
+
+**1. Set Up the Environment**
+
+- Install the required dependencies listed in **`requirements.txt`**.
+- Ensure you have Python 3.8+ installed.
+
+**2. Running the Analysis**
+
+- Open **`viscosity.ipynb`** in Jupyter Notebook.
+- Follow the sections to train, test, and compare models.
