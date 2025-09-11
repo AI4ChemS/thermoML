@@ -10,7 +10,7 @@ This work was done by training and deploying the models on a GPU (NVIDIA RTX4090
 2. ``demo/predictions.ipynb``: A few seconds per cell
 
 ## Software requirements
-This software has been tested and works on Linux (Ubuntu 22.04.4 LTS) and iOS v14.4.
+This software has been tested and works on Linux (Ubuntu 22.04.4 LTS).
 
 ## Installation
 Prior to installation of this package, it is recommended to start a fresh environment. This can be achieved from following this:
@@ -60,8 +60,16 @@ main_base_train_ST(df, df_mu, set_size, model_path, **kwargs) # isothermal
 
 ## Data Availability
 
-The folder in `demo/data` ontains the datasets required for training and testing the models. These include dynamic viscosity data for the fluids analyzed in the study.
+The folder in `demo/data` ontains the datasets required for training and testing the models. These include dynamic viscosity data for the fluids analyzed in the study. In addition to the Excel file, a consolidated **JSON file** is also available for convenience.  
 
+The dataset is organized across multiple sheets/tabs:  
+
+- **data**: Contains the name and SMILES representation of all materials in the dataset.  
+- **train_arr_data**: Provides Arrhenius equation coefficients obtained from linear regression on at least five data points for each compound, along with MSE and R² values that quantify the accuracy of the line fit.  
+- **train_mu_temp**: Temperature–viscosity data used as the training dataset. While viscosity is available at more than five temperatures, five representative points were chosen using quantile-to-median sampling for consistency.  
+- **mu_test**: Dynamic viscosity values of the test dataset.  
+- **temp_test**: Temperature values at which viscosity was reported for the test dataset.  
+- **exp_data**: Contains names, SMILES strings, temperatures, and viscosity values of materials measured in the lab, used as a benchmarking dataset.  
 
 ## Available features of interest
 
