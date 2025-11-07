@@ -38,7 +38,7 @@ pip install -e .
 ```
 
 ## Usage
-Demonstrations for training the thermodynamics-informed model, a model using datasets spanning multiple temperatures and a model using isothermal datasets can be found in ``demo/finetuning.ipynb``, with an additional demonstration on making predictions with each saved model found in ``demo/predictions.ipynb``. In order to summarize the different models available:
+Demonstrations for training the thermodynamics-informed model, a model using datasets spanning multiple temperatures and a model using isothermal datasets can be found in ``demo/finetuning.ipynb``, with an additional demonstration on making predictions with each saved model found in ``demo/predictions.ipynb``. This demo uses pretrained weights to show an example of how the model works. In order to summarize the different models available:
 1. **Thermodynamics-Informed Model Training**: Train the thermodynamics-informed model using the provided dataset, and making predictions with it.
 2. **Multitemperature Base Model**: Train and test a base ML model using datasets spanning multiple temperatures.
 3. **Isothermal Base Model**: Train and test a base ML model using isothermal datasets.
