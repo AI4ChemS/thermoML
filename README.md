@@ -1,6 +1,8 @@
 # ThermoML
 
-This repository accompanies the paper presenting *"Thermodynamics-informed machine learning to predict temperature-dependent properties of fluids"*. By combining established physics-based equations, such as the Arrhenius equation, with machine learning models, this approach encodes temperature dependence directly into the predictive framework. The model predicts the chemistry-dependent coefficients of the equation, enabling accurate and generalizable predictions across diverse chemistries and temperature ranges. The methodology has been validated using experimental data and benchmarked against two different base models.
+[![Article](https://img.shields.io/badge/Preprint-ChemRxiv-blue)](https://doi.org/10.26434/chemrxiv-2025-vfsvt)
+
+This repository accompanies the paper presenting [*"Thermodynamics-informed machine learning to predict temperature-dependent properties of fluids"*](https://doi.org/10.26434/chemrxiv-2025-vfsvt). By combining established physics-based equations, such as the Arrhenius equation, with machine learning models, this approach encodes temperature dependence directly into the predictive framework. The model predicts the chemistry-dependent coefficients of the equation, enabling accurate and generalizable predictions across diverse chemistries and temperature ranges. The methodology has been validated using experimental data and benchmarked against two different base models.
 
 ![Model Architecture](images/figure.svg)
 
@@ -83,3 +85,17 @@ The **`utils`** folder contains core scripts and functions for building and trai
    - Feature selection through a pipeline based on removing features with lowest variance, highest correlation with other features and highest number of missing values. Afterwards, ML based feature selection approach such as XGboost or Random Forest are available to select the most informative features with respect to the target values.
    - Training an ensemble of ANN models using **BAGGING** the training data.
    - Performing uncertainty assessment.
+  
+## Citation
+For more details about our work, please refer to our [paper]([https://doi.org/10.1038/s41524-025-01872-3](https://doi.org/10.26434/chemrxiv-2025-vfsvt)).
+And use the following citation to refer to our work:
+
+```bibtex
+@article{kochi2025thermodynamics,
+  title={Thermodynamics-informed machine learning for predicting temperature-dependent chemical properties},
+  author={Kochi, Mahyar Rajabi and Rezaei, Hanie and Khan, Sartaaj Takrim and Mamillapalli, Bhanu Teja and Ebrahimiazar, Maryam and Ye,
+          Haoming and Moosavian, Rose and Zargartalebi, Mohammad and Sinton, David and Moosavi, Seyed Mohamad},
+  year={2025},
+  journal={ChemRxiv}
+}
+```
